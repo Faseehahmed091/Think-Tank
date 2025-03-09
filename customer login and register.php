@@ -1,128 +1,69 @@
 <?php include('navbar.php'); ?>
 
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <!-- Nav tabs for toggle -->
-      <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-          <button class="nav-link active" id="login-tab">Login</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="register-tab">Register</button>
-        </li>
-      </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login – Pick n Go</title>
 
-      <!-- Login Form -->
-      <div id="login-form">
-        <form id="loginForm">
-          <div class="mb-3">
-            <input type="email" class="form-control" id="login-email" placeholder="Email" required>
-          </div>
-          <div class="mb-3">
-            <input type="password" class="form-control" id="login-password" placeholder="Password" required>
-          </div>
-          <button type="submit" class="btn btn-success w-100">Login</button>
-        </form>
-      </div>
+    <!-- Include Bootstrap for styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-      <!-- Registration Form -->
-      <div id="register-form" style="display:none;">
-        <form id="registerForm">
-          <div class="mb-3">
-            <input type="text" class="form-control" id="register-name" placeholder="Full Name" required>
-          </div>
-          <div class="mb-3">
-            <input type="email" class="form-control" id="register-email" placeholder="Email" required>
-          </div>
-          <div class="mb-3">
-            <input type="password" class="form-control" id="register-password" placeholder="Password" required>
-          </div>
-          <button type="submit" class="btn btn-success w-100">Register</button>
-        </form>
-      </div>
+    <style>
+        /* Aesthetic styling */
+        body {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            font-family: 'Poppins', sans-serif;
+        }
+        .login-container {
+            max-width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        .logo {
+            width: 120px;
+            display: block;
+            margin: 0 auto 15px;
+        }
+        .btn-custom {
+            background: #28a745;
+            color: white;
+        }
+        .btn-custom:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+        <div class="login-container">
+            <!-- Logo -->
+            <img src="/frontend/public/picknGologo.png" alt="Pick n Go Logo" class="logo">
 
-      <!-- Alert box for API messages -->
-      <div id="message" class="alert mt-3" style="display:none;"></div>
-    </div>
-  </div>
+            <h2 class="text-center text-dark fw-bold">Customer Login</h2>
 
-  <!-- Carousel Integration -->
-  <div id="carouselExample" class="carousel slide my-5">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="img1.jpg" class="d-block w-100" alt="Welcome">
-        <div class="carousel-caption">Welcome to Pick n Go!</div>
-      </div>
-      <div class="carousel-item">
-        <img src="img2.jpg" class="d-block w-100" alt="Quality Products">
-        <div class="carousel-caption">Quality Products Delivered</div>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-  </div>
-</div>
+            <form action="customer_login.php" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                </div>
 
-<?php include('footer.php'); ?>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                </div>
 
-<script>
-// Form toggle functionality
-document.getElementById('login-tab').onclick = function(){
-  document.getElementById('login-form').style.display = 'block';
-  document.getElementById('register-form').style.display = 'none';
-  this.classList.add('active');
-  document.getElementById('register-tab').classList.remove('active');
-};
-document.getElementById('register-tab').onclick = function(){
-  document.getElementById('register-form').style.display = 'block';
-  document.getElementById('login-form').style.display = 'none';
-  this.classList.add('active');
-  document.getElementById('login-tab').classList.remove('active');
-};
+                <button type="submit" class="btn btn-custom w-100">Login</button>
+            </form>
 
-// API Integration with fetch
-function handleSubmit(formId, apiUrl, data){
-  fetch(apiUrl, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(response => {
-    const messageBox = document.getElementById('message');
-    messageBox.style.display = 'block';
-    if(response.success){
-      messageBox.className = 'alert alert-success';
-      messageBox.innerHTML = response.message;
-    }else{
-      messageBox.className = 'alert alert-danger';
-      messageBox.innerHTML = response.message;
-    }
-  })
-  .catch(error => console.error('Error:', error));
-}
-
-// Login form submission
-loginForm.onsubmit = function(e){
-  e.preventDefault();
-  handleSubmit('loginForm', 'api/login.php', {
-    email: document.getElementById('login-email').value,
-    password: document.getElementById('login-password').value
-  });
-};
-
-// Registration form submission
-registerForm.onsubmit = function(e){
-  e.preventDefault();
-  handleSubmit('registerForm', 'api/register.php', {
-    name: document.getElementById('register-name').value,
-    email: document.getElementById('register-email').value,
-    password: document.getElementById('register-password').value
-  });
-};
-</script>
+            <p class="text-center mt-3">
+                Don't have an account? <a href="customer_register.php" class="text-success fw-bold">Sign up</a>
+            </p>
+        </div>
+    </main>
+</body>
+</html>
