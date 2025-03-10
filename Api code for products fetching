@@ -1,0 +1,32 @@
+from flask import Flask, jsonify
+from flask_cors import CORS
+import sqlite3
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    conn = sqlite3.connect('products.db')  # Ensure the file is in same folder
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Products")
+    rows = cursor.fetchall()
+    conn.close()
+
+    products = []
+    for row in rows:
+        products.append({
+            "product_id": row[0],
+            "trader_id": row[1],
+            "name": row[2],
+            "description": row[3],
+            "price": row[4],
+            "stock_quantity": row[5],
+            "category": row[6],
+            "image_url": row[7]
+        })
+
+    return jsonify(products)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
