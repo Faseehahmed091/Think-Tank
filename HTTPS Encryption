@@ -1,0 +1,34 @@
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name yourdomain.com www.yourdomain.com;
+    ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+    # Other configurations...
+}
+
+sudo brew services restart nginx
+
+<VirtualHost *:80>
+    ServerName yourdomain.com
+    ServerAlias www.yourdomain.com
+    Redirect permanent / https://yourdomain.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName yourdomain.com
+    DocumentRoot /usr/local/var/www/yourdomain
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/yourdomain.com/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/yourdomain.com/privkey.pem
+    # Other configurations...
+</VirtualHost>
