@@ -1,0 +1,71 @@
+/* General styling */
+body {
+    background-color: #f8f9fa; /* Changed to a soft light gray */
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container styling */
+.container {
+    width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo styling */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    width: 120px; /* Adjust as needed */
+    height: auto;
+}
+
+/* Input and button styling */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Login button */
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px; /* Space between Login and Signup button */
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Signup button */
+#toggle-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#toggle-btn:hover {
+    background-color: #0056b3;
+}
+
+
