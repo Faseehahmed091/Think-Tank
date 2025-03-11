@@ -59,3 +59,14 @@ def get_inventory(product_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+
+
+Now Your API Has:
+/products → to show full list of products
+/inventory/<product_id> → to show stock for any product
+You can now run this app.py and frontend team can fetch both product data and stock availability live.
