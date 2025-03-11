@@ -1,0 +1,61 @@
+from flask import Flask, jsonify
+import sqlite3
+
+app = Flask(__name__)
+
+# ======================
+# Products API Endpoint
+# ======================
+@app.route('/products', methods=['GET'])
+def get_all_products():
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Products")
+    rows = cursor.fetchall()
+    conn.close()
+
+    products = []
+    for row in rows:
+        products.append({
+            'product_id': row[0],
+            'trader_id': row[1],
+            'name': row[2],
+            'description': row[3],
+            'price': row[4],
+            'stock_quantity': row[5],
+            'category': row[6],
+            'image_url': row[7]
+        })
+
+    return jsonify(products)
+
+# ======================
+# Inventory API Endpoint
+# ======================
+def get_inventory_by_product_id(product_id):
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Inventory WHERE product_id = ?", (product_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        return {
+            'inventory_id': row[0],
+            'product_id': row[1],
+            'stock_quantity': row[2],
+            'last_updated': row[3]
+        }
+    else:
+        return None
+
+@app.route('/inventory/<product_id>', methods=['GET'])
+def get_inventory(product_id):
+    result = get_inventory_by_product_id(product_id)
+    if result:
+        return jsonify(result)
+    else:
+        return jsonify({'error': 'Inventory not found'}), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
