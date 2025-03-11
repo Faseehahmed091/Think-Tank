@@ -1,9 +1,0 @@
-/app
-    |-- __init__.py           # Initialize the app and extensions
-    |-- config.py             # Store app configuration (e.g., PayPal credentials, encryption key)
-    |-- models.py             # Define database models (Order model)
-    |-- payment_gateway.py    # Integrate PayPal and provide functions for payment processing
-    |-- payment_api.py        # Define the API endpoints for payment processing and status checking
-    |-- encryption.py         # Handle encryption/decryption logic
-    |-- fraud_prevention.py   # Verify webhooks for fraud prevention
-    |-- run.py                # Main entry point to start the Flask app
