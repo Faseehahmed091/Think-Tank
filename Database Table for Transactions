@@ -1,0 +1,81 @@
+Step 1: Create Database Table for Transactions
+
+CREATE TABLE PAYMENTS (
+    PAYMENT_ID      NUMBER PRIMARY KEY,
+    USER_ID         NUMBER NOT NULL,
+    ORDER_ID        NUMBER NOT NULL,
+    PAYMENT_METHOD  VARCHAR2(50),  -- PayPal, Credit Card, etc.
+    TRANSACTION_ID  VARCHAR2(255) UNIQUE, -- PayPal transaction ID
+    AMOUNT          NUMBER NOT NULL,
+    STATUS          VARCHAR2(50),  -- Pending, Completed, Failed
+    CREATED_AT      TIMESTAMP DEFAULT SYSTIMESTAMP,
+    FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID)
+);
+
+Step 2: PayPal API Integration (PL/SQL Web Request)
+
+CREATE OR REPLACE PROCEDURE PROCESS_PAYPAL_PAYMENT(
+    p_user_id IN NUMBER,
+    p_order_id IN NUMBER,
+    p_amount IN NUMBER,
+    p_currency IN VARCHAR2 DEFAULT 'USD'
+) AS
+    v_url VARCHAR2(4000);
+    v_response CLOB;
+    v_transaction_id VARCHAR2(255);
+    v_status VARCHAR2(50);
+    v_http_request  UTL_HTTP.REQ;
+    v_http_response UTL_HTTP.RESP;
+    v_buffer VARCHAR2(32767);
+    v_auth_token VARCHAR2(255) := 'YOUR_PAYPAL_ACCESS_TOKEN'; -- Replace with actual token
+BEGIN
+    -- PayPal API URL for creating payments
+    v_url := 'https://api-m.sandbox.paypal.com/v2/checkout/orders';
+
+    -- Open HTTP request
+    v_http_request := UTL_HTTP.BEGIN_REQUEST(v_url, 'POST', 'HTTP/1.1');
+    UTL_HTTP.SET_HEADER(v_http_request, 'Content-Type', 'application/json');
+    UTL_HTTP.SET_HEADER(v_http_request, 'Authorization', 'Bearer ' || v_auth_token);
+
+    -- Set JSON body for PayPal request
+    UTL_HTTP.WRITE_TEXT(v_http_request, '{
+        "intent": "CAPTURE",
+        "purchase_units": [{
+            "amount": {
+                "currency_code": "' || p_currency || '",
+                "value": "' || p_amount || '"
+            }
+        }]
+    }');
+
+    -- Get response from PayPal
+    v_http_response := UTL_HTTP.GET_RESPONSE(v_http_request);
+    
+    -- Read response
+    LOOP
+        UTL_HTTP.READ_LINE(v_http_response, v_buffer, TRUE);
+        v_response := v_response || v_buffer;
+    END LOOP;
+    UTL_HTTP.END_RESPONSE(v_http_response);
+
+    -- Extract Transaction ID from response
+    v_transaction_id := SUBSTR(v_response, INSTR(v_response, '"id": "') + 6, 20);
+
+    -- Insert payment record
+    INSERT INTO PAYMENTS (PAYMENT_ID, USER_ID, ORDER_ID, PAYMENT_METHOD, TRANSACTION_ID, AMOUNT, STATUS)
+    VALUES (SEQ_PAYMENTS.NEXTVAL, p_user_id, p_order_id, 'PayPal', v_transaction_id, p_amount, 'Completed');
+
+    DBMS_OUTPUT.PUT_LINE('Success: Payment completed with Transaction ID: ' || v_transaction_id);
+
+EXCEPTION
+    WHEN UTL_HTTP.END_OF_BODY THEN
+        NULL;
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Unable to process payment.');
+        v_status := 'Failed';
+
+        -- Store failed payment record
+        INSERT INTO PAYMENTS (PAYMENT_ID, USER_ID, ORDER_ID, PAYMENT_METHOD, AMOUNT, STATUS)
+        VALUES (SEQ_PAYMENTS.NEXTVAL, p_user_id, p_order_id, 'PayPal', p_amount, 'Failed');
+END PROCESS_PAYPAL_PAYMENT;
+/
