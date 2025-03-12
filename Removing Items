@@ -1,0 +1,57 @@
+CREATE OR REPLACE PROCEDURE REMOVE_FROM_CART(
+    p_user_id IN NUMBER,
+    p_product_id IN NUMBER DEFAULT NULL
+) AS
+    v_product_count NUMBER;
+    v_quantity NUMBER;
+BEGIN
+    -- If a specific product is given, remove only that product
+    IF p_product_id IS NOT NULL THEN
+        -- Check if product exists in cart
+        SELECT COUNT(*), QUANTITY INTO v_product_count, v_quantity
+        FROM CART
+        WHERE USER_ID = p_user_id AND PRODUCT_ID = p_product_id
+        GROUP BY QUANTITY;
+
+        IF v_product_count = 0 THEN
+            DBMS_OUTPUT.PUT_LINE('Error: Product not found in cart.');
+            RETURN;
+        END IF;
+
+        -- Restore stock quantity
+        UPDATE PRODUCTS
+        SET STOCK_QUANTITY = STOCK_QUANTITY + v_quantity
+        WHERE PRODUCT_ID = p_product_id;
+
+        -- Remove product from cart
+        DELETE FROM CART WHERE USER_ID = p_user_id AND PRODUCT_ID = p_product_id;
+        DBMS_OUTPUT.PUT_LINE('Success: Product removed from cart.');
+
+    ELSE
+        -- Check if user has any items in the cart
+        SELECT COUNT(*) INTO v_product_count FROM CART WHERE USER_ID = p_user_id;
+
+        IF v_product_count = 0 THEN
+            DBMS_OUTPUT.PUT_LINE('Error: Cart is already empty.');
+            RETURN;
+        END IF;
+
+        -- Restore stock for all products in cart before emptying it
+        FOR item IN (SELECT PRODUCT_ID, QUANTITY FROM CART WHERE USER_ID = p_user_id) LOOP
+            UPDATE PRODUCTS
+            SET STOCK_QUANTITY = STOCK_QUANTITY + item.QUANTITY
+            WHERE PRODUCT_ID = item.PRODUCT_ID;
+        END LOOP;
+
+        -- Remove all products from cart
+        DELETE FROM CART WHERE USER_ID = p_user_id;
+        DBMS_OUTPUT.PUT_LINE('Success: Cart emptied successfully.');
+    END IF;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Error: No items found in cart.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Unable to remove item(s) from cart.');
+END REMOVE_FROM_CART;
+/
