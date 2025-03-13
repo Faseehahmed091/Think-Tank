@@ -10,8 +10,10 @@
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="products.php">Products</a></li>
         <li class="nav-item"><a class="nav-link" href="cart.php">Cart</a></li>
-        <li class="nav-item"><a class="nav-link" href="customer login and registration.php">Login/Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="customer_login_registration.php">Login/Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="trader_login_registration.php">Trader Login</a></li>
       </ul>
     </div>
   </div>
 </nav>
+

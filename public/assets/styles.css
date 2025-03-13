@@ -1,108 +1,189 @@
-/* General styling */
+/* General Page Styles */
 body {
-    background-color: #f8f9fa; /* Changed to a soft light gray */
-    font-family: Arial, sans-serif;
-    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    background: url('../assets/grocery-bg.jpg') no-repeat center center/cover;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     margin: 0;
-    padding: 0;
 }
 
-/* Container styling */
+/* Container */
 .container {
-    width: 300px;
-    margin: 50px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.85); /* Soft transparency */
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 380px;
+    animation: fadeIn 0.8s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(6px); /* Adds a smooth blur effect */
 }
 
-/* Logo styling */
+.container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Logo */
 .logo-container {
-    text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
 }
 
 .logo-container img {
-    width: 120px; /* Adjust as needed */
-    height: auto;
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: fadeInScale 1s ease-in-out;
 }
 
-/* Input and button styling */
-input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+/* Logo Hover Effect */
+.logo-container img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-/* Login button */
-button[type="submit"] {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px;
+/* Heading */
+h2 {
+    color: #14532d; /* Deep Green */
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: slideDown 0.8s ease-out;
+}
+
+/* Form Inputs */
+form input {
     width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1.8px solid #ddd;
+    border-radius: 30px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Focus */
+form input:focus {
+    border-color: #2c7a7b;
+    outline: none;
+    box-shadow: 0 0 12px rgba(44, 122, 123, 0.5);
+    transform: scale(1.02);
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    border-radius: 5px;
-    margin-bottom: 10px; /* Space between Login and Signup button */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Login & Signup Buttons */
+button[type="submit"] {
+    background: linear-gradient(135deg, #2c7a7b, #14532d);
+    color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 button[type="submit"]:hover {
-    background-color: #218838;
+    background: linear-gradient(135deg, #1e5959, #0f3b1e);
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* Signup button */
+/* Toggle Button */
 #toggle-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
-    border-radius: 5px;
+    background: #48bb78;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
 }
 
 #toggle-btn:hover {
-    background-color: #0056b3;
+    background: #2f855a;
+    transform: scale(1.05);
+    box-shadow: 0 5px 10px rgba(72, 187, 120, 0.3);
 }
 
-/* Trader Login & Signup Form */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
+/* Remove Blue Focus Borders */
+input:focus, button:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }
-.logo-container img {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 15px;
+
+/* Message Box */
+#message {
+    font-size: 14px;
+    margin-top: 10px;
 }
+
+/* Form Layout Fix */
 form {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    align-items: center;
 }
-input {
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+
+form input, form button {
+    width: 90%;
 }
-button {
-    padding: 10px;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
-button:hover {
-    background-color: #2563eb;
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
 
 
